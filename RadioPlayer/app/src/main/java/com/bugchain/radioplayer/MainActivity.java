@@ -1,6 +1,5 @@
 package com.bugchain.radioplayer;
 
-import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -31,16 +30,9 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
         btnPlayPause = (Button)findViewById(R.id.btnPlayPause);
         btnPlayPause.setOnClickListener(this);
 
-        LocalBroadcastManager.getInstance(this).registerReceiver(new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                if(intent.getExtras() != null) {
-                    String status = intent.getStringExtra(Constants.RADIO_KEY_VALUE);
-                    Log.w("Main", status);
-                    updateTextStatus(status);
-                }
-            }
-        }, new IntentFilter(Constants.RADIO_KEY_FILTER));
+        initialBroadcast();
+
+
 
     }
 
@@ -51,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
                     if(isRadioPlaying){
                         stopRadioPlayerService();
                         isRadioPlaying = false;
+                        Utils.updateRadioPlayerNotification(MainActivity.this, false);
                     }else {
                         isRadioPlaying = true;
                         startRadioPlayerService();
@@ -69,16 +62,6 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
     private void stopRadioPlayerService(){
         Intent intentService = new Intent(getApplicationContext(), RadioPlayerService.class);
         stopService(intentService);
-    }
-
-    private boolean isRadioServiceRunning(){
-        ActivityManager manager = (ActivityManager)getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo serviceInfo : manager.getRunningServices(Integer.MAX_VALUE)){
-            if(serviceInfo.service.getClassName().equals(RadioPlayerService.class.getName())){
-                return true;
-            }
-        }
-        return false;
     }
 
     private void updateUI(boolean isRadioPlaying){
@@ -105,10 +88,22 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
 
     }
 
+    private void initialBroadcast(){
+        LocalBroadcastManager.getInstance(this).registerReceiver(new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if(intent.getExtras() != null) {
+                    String status = intent.getStringExtra(Constants.RADIO_KEY_VALUE);
+                    Log.w("Main", status);
+                    updateTextStatus(status);
+                }
+            }
+        }, new IntentFilter(Constants.RADIO_KEY_FILTER));
+    }
     @Override
     protected void onResume() {
         super.onResume();
-        isRadioPlaying = isRadioServiceRunning();
+        isRadioPlaying = Utils.checkServiceRunning(MainActivity.this, RadioPlayerService.class);
         updateUI(isRadioPlaying);
     }
 

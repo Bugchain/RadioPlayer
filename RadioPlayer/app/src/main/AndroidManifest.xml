@@ -21,7 +21,21 @@
 
 
         <service android:name=".service.RadioPlayerService"
-            android:exported="false"/>
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.bugchain.radioplayer.notification.play"/>
+                <action android:name="com.bugchain.radioplayer.notification.close"/>
+                <action android:name="com.bugchain.radioplayer.notification.open"/>
+            </intent-filter>
+        </service>
+
+        <receiver android:name=".service.RadioBroadcastReceiver">
+            <intent-filter>
+                <action android:name="com.bugchain.radioplayer.notification.play.pause"/>
+                <action android:name="com.bugchain.radioplayer.notification.close"/>
+                <action android:name="com.bugchain.radioplayer.notification.open"/>
+            </intent-filter>
+        </receiver>
 
 
     </application>

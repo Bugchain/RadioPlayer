@@ -15,5 +15,11 @@ public class Constants {
     public static final String ON_BUFFERING = "on_buffering";
     public static final String ON_STOP = "on_stop";
 
+    public static final int RADIO_PLAYER_NOTIFICATION_ID = 166;
+
+    public static final String PLAYER_NOTIFICATION_INTENT_PLAY_PAUSE = "com.bugchain.radioplayer.notification.play.pause";
+    public static final String PLAYER_NOTIFICATION_INTENT_CLOSE = "com.bugchain.radioplayer.notification.close";
+    public static final String PLAYER_NOTIFICATION_INTENT_OPEN = "com.bugchain.radioplayer.notification.open";
+
 
 }

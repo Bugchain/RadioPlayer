@@ -4,6 +4,7 @@ package com.bugchain.radioplayer.service;
  * chain.chaiyaphat@gmail.com
  */
 
+
 import android.app.Service;
 import android.content.Intent;
 import android.media.AudioManager;
@@ -14,6 +15,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.bugchain.radioplayer.Constants;
+import com.bugchain.radioplayer.Utils;
 
 import java.io.IOException;
 
@@ -69,6 +71,7 @@ public class RadioPlayerService extends Service {
             public void onPrepared(MediaPlayer mp) {
                 setBroadcast(Constants.ON_PLAYING);
                 mp.start();
+                Utils.updateRadioPlayerNotification(getApplicationContext(), true);
             }
         });
         mediaPlayer.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener() {
@@ -88,9 +91,9 @@ public class RadioPlayerService extends Service {
 
     }
 
-    private void setBroadcast(String result){
+    private void setBroadcast(String result) {
         LocalBroadcastManager.getInstance(getApplicationContext())
-               .sendBroadcast(new Intent(Constants.RADIO_KEY_FILTER).putExtra(Constants.RADIO_KEY_VALUE,result));
+                .sendBroadcast(new Intent(Constants.RADIO_KEY_FILTER).putExtra(Constants.RADIO_KEY_VALUE, result));
     }
 
     private void stopRadio() {
@@ -101,7 +104,6 @@ public class RadioPlayerService extends Service {
             mediaPlayer.release();
             mediaPlayer = null;
         }
-
     }
 
 
